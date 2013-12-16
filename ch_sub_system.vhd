@@ -39,6 +39,7 @@ entity ch_sub_system is
         CH_OUT      : out std_logic;
         TRIGED      : out std_logic;
         LOAD        : out std_logic;
+	PULSE_OUT_ENV: out std_logic;
         DATA        : in  std_logic_vector (15 downto 0);
         ADDR        : out std_logic_vector (15 downto 0);
         PULSE_COUNT : out std_logic_vector (15 downto 0);
@@ -128,6 +129,7 @@ begin
   end process t_flipflp;
 
   CH_OUT <= CH_OUT_SIG;
+  PULSE_OUT_ENV <= PULSE_OUT;
   
 end Behavioral;
 
