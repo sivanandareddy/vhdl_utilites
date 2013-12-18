@@ -18,9 +18,9 @@
 --
 ----------------------------------------------------------------------------------
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.STD_LOGIC_ARITH.all;
+use IEEE.STD_LOGIC_UNSIGNED.all;
 
 ---- Uncomment the following library declaration if instantiating
 ---- any Xilinx primitives in this code.
@@ -28,11 +28,12 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 --use UNISIM.VComponents.all;
 
 entity gaurd is
-    Port ( SAFETY_TIME : in  STD_LOGIC_VECTOR (15 downto 0);
-           PULSE_IN : in  STD_LOGIC;
-           PULSE_OUT : out  STD_LOGIC;
-           RST : in  STD_LOGIC;
-           SYS_CLK : in  STD_LOGIC);
+  port (SAFETY_TIME : in  std_logic_vector (15 downto 0);
+        PULSE_IN    : in  std_logic;
+        FAULT       : in  std_logic;
+        PULSE_OUT   : out std_logic;
+        RST         : in  std_logic;
+        SYS_CLK     : in  std_logic);
 end gaurd;
 
 architecture Behavioral of gaurd is
@@ -48,7 +49,7 @@ architecture Behavioral of gaurd is
   signal OUTPUT : std_logic;
 begin
 
-  monostable_1: monostable
+  monostable_1 : monostable
     port map (
       PULSE_WIDTH => SAFTEY_TIME,
       TRIGGER     => PULSE_IN,
@@ -56,7 +57,7 @@ begin
       RST         => RST,
       OUTPUT      => OUTPUT);
 
-  PULSE_OUT <= OUTPUT and PULSE_IN;
+  PULSE_OUT <= OUTPUT and PULSE_IN and (not FAULT);
 
 end Behavioral;
 

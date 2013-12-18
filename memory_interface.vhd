@@ -12,7 +12,7 @@ use IEEE.STD_LOGIC_1164.all;
 use IEEE.STD_LOGIC_UNSIGNED.all;
 
 entity memory_interface is
-  
+
   port (
     RST       : in  std_logic;
     SYS_CLK   : in  std_logic;          -- system clock 50 MHZ
@@ -31,7 +31,7 @@ architecture behav of memory_interface is
 
   signal load_over_mono : std_logic;    -- output from monostable
   signal latch_mono     : std_logic;  -- latch signal to latch the data from ROM on the falling edge of the pulse
-signal q0, q1 : std_logic;
+  signal q0, q1         : std_logic;
   component monostable
     port (
       PULSE_WIDTH : in  std_logic_vector(15 downto 0);
@@ -40,14 +40,14 @@ signal q0, q1 : std_logic;
       RST         : in  std_logic;
       OUTPUT      : out std_logic);
   end component;
-  
+
 begin  -- behav
 
   -- purpose: this process latcht the address from input on to the output lines when the logic is high
   -- type   : combinational
   -- inputs : LOAD
   -- outputs: ADDR_ROM
-  addr_latch : process (LOAD,SYS_CLK)
+  addr_latch : process (LOAD, SYS_CLK)
   begin  -- process addr_latch
     if LOAD = '1' then
       ADDR_ROM <= ADDR;
@@ -64,8 +64,8 @@ begin  -- behav
   delay_load : process (SYS_CLK)
   begin  -- process delay_load
     if rising_edge(SYS_CLK) then
-      q0 <= LOAD;
-      q1 <= q0;
+      q0     <= LOAD;
+      q1     <= q0;
       CE_ROM <= q1;
     end if;
   end process delay_load;

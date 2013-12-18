@@ -18,9 +18,9 @@
 --
 ----------------------------------------------------------------------------------
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.STD_LOGIC_ARITH.all;
+use IEEE.STD_LOGIC_UNSIGNED.all;
 
 ---- Uncomment the following library declaration if instantiating
 ---- any Xilinx primitives in this code.
@@ -28,17 +28,17 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 --use UNISIM.VComponents.all;
 
 entity envelope_clip is
-    Port ( ENV_IN : in  STD_LOGIC;
-           PULSES_IN : in  STD_LOGIC_VECTOR (11 downto 0);
-           PULSES_OUT : out  STD_LOGIC_VECTOR (11 downto 0));
+  port (ENV_IN     : in  std_logic;
+        PULSES_IN  : in  std_logic_vector (11 downto 0);
+        PULSES_OUT : out std_logic_vector (11 downto 0));
 end envelope_clip;
 
 architecture Behavioral of envelope_clip is
 
 begin
-anding: for i in 11 downto 0 generate
-  PULSES_OUT(i) <= ENV_IN and PULSES_IN(i);
-end generate anding;
+  anding : for i in 11 downto 0 generate
+    PULSES_OUT(i) <= ENV_IN and PULSES_IN(i);
+  end generate anding;
 
 end Behavioral;
 
