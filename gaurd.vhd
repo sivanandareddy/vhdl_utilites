@@ -51,7 +51,7 @@ begin
 
   monostable_1 : monostable
     port map (
-      PULSE_WIDTH => SAFTEY_TIME,
+      PULSE_WIDTH => SAFETY_TIME,
       TRIGGER     => PULSE_IN,
       SYS_CLK     => SYS_CLK,
       RST         => RST,

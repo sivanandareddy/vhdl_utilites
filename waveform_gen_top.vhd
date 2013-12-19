@@ -24,6 +24,11 @@
 --       |_____________|__________ GND
 -------------------------------------------------------------------------------
 
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.STD_LOGIC_ARITH.all;
+use IEEE.STD_LOGIC_UNSIGNED.all;
+
 entity waveform_gen_top is
 
   generic (
@@ -173,17 +178,20 @@ architecture Behaviour of waveform_gen_top is
   signal TRIGED_CH1, TRIGED_CH2, TRIGED_CH3, TRIGED_CH4, TRIGED_CH5, TRIGED_CH6                   : std_logic;  -- to generate all triggered signal by anding all the triggered signals from inndividual channels
   signal PULSE_OUT_ENV                                                                            : std_logic;  -- internal signal to be connected to envelope_gen module
   signal CH1, CH2, CH3, CH4, CH5, CH6                                                             : std_logic;  -- internal signal to connect the channel sub system to dead time controller
+  signal CH1_NOT, CH2_NOT, CH3_NOT, CH4_NOT, CH5_NOT, CH6_NOT : std_logic;  -- signal to connect to not signal of CH1
   signal DT_CH1, DT_CH2, DT_CH3, DT_CH4, DT_CH5, DT_CH6                                           : std_logic;  -- internal signal from Dead time controller to envelope clipper
   signal DT_NOT_CH1, DT_NOT_CH2, DT_NOT_CH3, DT_NOT_CH4, DT_NOT_CH5, DT_NOT_CH6                   : std_logic;  -- internal signal from Dead time controller to envelope clipper
   signal ADDR_int                                                                                 : std_logic_vector (20 downto 0);  -- internal signal
                                         -- connected to mem
                                         -- ctrl and mem interface
   signal PULSE_COUNT_CH1                                                                          : std_logic_vector (15 downto 0);  -- to channel 1 sub system and envelope generator
-  signal ADDR                                                                                     : std_logic_vector (15 downto 0);
+ -- signal ADDR                                                                                     : std_logic_vector (15 downto 0);
   signal ENV_OUT                                                                                  : std_logic;  -- to connect the envelope generator and envelope clipper
   --signal PULSE_COUNT  : std_logic_vector (15 downto 0);  -- singal to debugging the channel subsystem can be removed in the release
   --signal TIME_COUNT : std_logic_vector (15 downto 0);  -- singal to debugging the channel subsystem can be removed in the release
   signal PULSES_IN, PULSES_OUT                                                                    : std_logic_vector (11 downto 0);  -- to connect gaurd and indvidual channels to envelope clipper
+  signal ADDR, DATA : std_logic_vector (15 downto 0);  -- signal to connect memory controller and memory interface
+  signal LOAD, LOAD_OVER : std_logic;   -- signal to connect memory controller and memory interface
 begin  -- architecture Behaviour
 
   ch_sub_system_1 : entity work.ch_sub_system
@@ -201,7 +209,7 @@ begin  -- architecture Behaviour
       PULSE_OUT_ENV => PULSE_OUT_ENV,
       DATA          => DATA_CH1,
       ADDR          => ADDR_CH1,
-      PULSE_COUNT   => open,
+      PULSE_COUNT   => PULSE_COUNT_CH1,
       TIME_COUNT    => open);
   ch_sub_system_2 : entity work.ch_sub_system
     generic map (
@@ -299,7 +307,7 @@ begin  -- architecture Behaviour
       PULSE_OUT => DT_CH1);
   dead_time_controller_2 : entity work.dead_time_controller
     port map (
-      PULSE_IN  => (not CH1),
+      PULSE_IN  => CH1_NOT,
       RST       => RST,
       SYS_CLK   => SYS_CLK,
       DEAD_TIME => DEAD_TIME,
@@ -313,7 +321,7 @@ begin  -- architecture Behaviour
       PULSE_OUT => DT_CH2);
   dead_time_controller_4 : entity work.dead_time_controller
     port map (
-      PULSE_IN  => (not CH2),
+      PULSE_IN  => CH2_NOT,
       RST       => RST,
       SYS_CLK   => SYS_CLK,
       DEAD_TIME => DEAD_TIME,
@@ -327,7 +335,7 @@ begin  -- architecture Behaviour
       PULSE_OUT => DT_CH3);
   dead_time_controller_6 : entity work.dead_time_controller
     port map (
-      PULSE_IN  => (not CH3),
+      PULSE_IN  => CH3_NOT,
       RST       => RST,
       SYS_CLK   => SYS_CLK,
       DEAD_TIME => DEAD_TIME,
@@ -341,7 +349,7 @@ begin  -- architecture Behaviour
       PULSE_OUT => DT_CH4);
   dead_time_controller_8 : entity work.dead_time_controller
     port map (
-      PULSE_IN  => (not CH4),
+      PULSE_IN  => CH4_NOT,
       RST       => RST,
       SYS_CLK   => SYS_CLK,
       DEAD_TIME => DEAD_TIME,
@@ -355,7 +363,7 @@ begin  -- architecture Behaviour
       PULSE_OUT => DT_CH5);
   dead_time_controller_10 : entity work.dead_time_controller
     port map (
-      PULSE_IN  => (not CH5),
+      PULSE_IN  => CH5_NOT,
       RST       => RST,
       SYS_CLK   => SYS_CLK,
       DEAD_TIME => DEAD_TIME,
@@ -369,7 +377,7 @@ begin  -- architecture Behaviour
       PULSE_OUT => DT_CH6);
   dead_time_controller_12 : entity work.dead_time_controller
     port map (
-      PULSE_IN  => (not CH6),
+      PULSE_IN  => CH6_NOT,
       RST       => RST,
       SYS_CLK   => SYS_CLK,
       DEAD_TIME => DEAD_TIME,
@@ -537,4 +545,11 @@ begin  -- architecture Behaviour
       RST         => RST,
       SYS_CLK     => SYS_CLK);
 
+  CH1_NOT <= not CH1;
+  CH2_NOT <= not CH2;
+  CH3_NOT <= not CH3;
+  CH4_NOT <= not CH4;
+  CH5_NOT <= not CH5;
+  CH6_NOT <= not CH6;
+  
 end architecture Behaviour;

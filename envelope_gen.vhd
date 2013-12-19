@@ -41,6 +41,7 @@ end envelope_gen;
 architecture Behavioral of envelope_gen is
 signal SET  : std_logic;
 signal RESET  : std_logic;
+signal ENV_OUT_PREV : std_logic;
 begin
 
   -- purpose: to latch the channel output on the falling edge of the pulse out
@@ -54,7 +55,7 @@ begin
       SET <= '0';
     elsif PULSE_OUT'event and PULSE_OUT = '0' then  -- falling clock edge
       SET <= CH1_OUT;
-      if PULSE_COUNT = "0000000000000000" then
+      if PULSE_COUNT = "0000000000000001" then
         RESET <= '1';
       else
         RESET <= '0';
@@ -70,13 +71,16 @@ begin
   begin  -- process sr_ff
     if RST = '0' then                   -- asynchronous reset (active low)
       ENV_OUT <= '0';
+      ENV_OUT_PREV <= '0';
     elsif SYS_CLK'event and SYS_CLK = '1' then  -- rising clock edge
       if (SET = '0' and RESET = '0') then
-        ENV_OUT <= '0';
+        ENV_OUT <= ENV_OUT_PREV;
       elsif (SET = '1' and RESET = '0') then
         ENV_OUT <= '1';
+        ENV_OUT_PREV <= '1';
       elsif (SET = '0' and RESET = '1') then
         ENV_OUT <= '0';
+        ENV_OUT_PREV <= '0';
       elsif (SET = '1' and RESET = '1') then
         ENV_OUT <= '0';
       end if;
