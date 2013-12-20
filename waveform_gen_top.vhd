@@ -40,6 +40,7 @@ entity waveform_gen_top is
     SYS_CLK     : in  std_logic;  -- system clock 50 MHz using the on board clock
     TRIG_IN        : in  std_logic;  -- input trigger to generate pulse burst
     FAULT       : in  std_logic;        -- fault active high
+    DEBUG       : out std_logic_vector (15 downto 0);
     ---------------------------------------------------------------------------
     -- Connected to memory glue logic
     ---------------------------------------------------------------------------
@@ -570,5 +571,8 @@ begin  -- architecture Behaviour
   CH4_NOT <= not CH4;
   CH5_NOT <= not CH5;
   CH6_NOT <= not CH6;
-  
+  DEBUG(0) <= ENV_OUT;
+  DEBUG(1) <= CH2_NOT;
+  DEBUG(2) <= PULSES_OUT(4);
+  DEBUG(3) <= PULSES_OUT(5);
 end architecture Behaviour;

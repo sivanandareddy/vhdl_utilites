@@ -55,7 +55,7 @@ begin
       SET <= '0';
     elsif PULSE_OUT'event and PULSE_OUT = '0' then  -- falling clock edge
       SET <= CH1_OUT;
-      if PULSE_COUNT = "0000000000000001" then
+      if PULSE_COUNT = "0000000000000000" then
         RESET <= '1';
       else
         RESET <= '0';
