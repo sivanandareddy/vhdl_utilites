@@ -254,6 +254,9 @@ begin
       when LOAD_CH1_STATE =>
         LOAD <= '1';
         ADDR <= ADDR_CH1;
+      when WAIT_CH1_DATA_STATE =>
+        LOAD <= '1';
+        ADDR <= ADDR_CH1;
       when WAIT_FOR_2MC_CH1_STATE =>
         LOAD          <= '0';
         ADDR          <= "0000000000000000";
@@ -267,6 +270,9 @@ begin
         LOAD_DONE_CH1 <= '0';
         LOAD_DONE_CH2 <= '0';
       when LOAD_CH2_STATE =>
+        LOAD <= '1';
+        ADDR <= ADDR_CH2;
+      when WAIT_CH2_DATA_STATE =>
         LOAD <= '1';
         ADDR <= ADDR_CH2;
       when WAIT_FOR_2MC_CH2_STATE =>
@@ -284,6 +290,9 @@ begin
       when LOAD_CH3_STATE =>
         LOAD <= '1';
         ADDR <= ADDR_CH3;
+      when WAIT_CH3_DATA_STATE =>
+        LOAD <= '1';
+        ADDR <= ADDR_CH3;
       when WAIT_FOR_2MC_CH3_STATE =>
         LOAD          <= '0';
         ADDR          <= "0000000000000000";
@@ -297,6 +306,9 @@ begin
         LOAD_DONE_CH3 <= '0';
         LOAD_DONE_CH4 <= '0';
       when LOAD_CH4_STATE =>
+        LOAD <= '1';
+        ADDR <= ADDR_CH4;
+      when WAIT_CH4_DATA_STATE =>
         LOAD <= '1';
         ADDR <= ADDR_CH4;
       when WAIT_FOR_2MC_CH4_STATE =>
@@ -314,6 +326,9 @@ begin
       when LOAD_CH5_STATE =>
         LOAD <= '1';
         ADDR <= ADDR_CH5;
+      when WAIT_CH5_DATA_STATE =>
+        LOAD <= '1';
+        ADDR <= ADDR_CH5;
       when WAIT_FOR_2MC_CH5_STATE =>
         LOAD          <= '0';
         ADDR          <= "0000000000000000";
@@ -327,6 +342,9 @@ begin
         LOAD_DONE_CH5 <= '0';
         LOAD_DONE_CH6 <= '0';
       when LOAD_CH6_STATE =>
+        LOAD <= '1';
+        ADDR <= ADDR_CH6;
+      when WAIT_CH6_DATA_STATE =>
         LOAD <= '1';
         ADDR <= ADDR_CH6;
       when WAIT_FOR_2MC_CH6_STATE =>

@@ -38,7 +38,7 @@ entity waveform_gen_top is
   port (
     RST         : in  std_logic;        -- active low reset
     SYS_CLK     : in  std_logic;  -- system clock 50 MHz using the on board clock
-    TRIG        : in  std_logic;  -- input trigger to generate pulse burst
+    TRIG_IN        : in  std_logic;  -- input trigger to generate pulse burst
     FAULT       : in  std_logic;        -- fault active high
     ---------------------------------------------------------------------------
     -- Connected to memory glue logic
@@ -169,6 +169,15 @@ architecture Behaviour of waveform_gen_top is
       SYS_CLK     : in  std_logic);
   end component gaurd;
 
+  component monostable is
+    port (
+      PULSE_WIDTH : in  std_logic_vector(15 downto 0);
+      TRIGGER     : in  std_logic;
+      SYS_CLK     : in  std_logic;
+      RST         : in  std_logic;
+      OUTPUT      : out std_logic);
+  end component monostable;
+
   signal LOAD_DONE_CH1, LOAD_DONE_CH2, LOAD_DONE_CH3, LOAD_DONE_CH4, LOAD_DONE_CH5, LOAD_DONE_CH6 : std_logic;  -- internal signal to connect the channel sub system and the memory controller
   signal DATA_CH1, DATA_CH2, DATA_CH3, DATA_CH4, DATA_CH5, DATA_CH6                               : std_logic_vector (15 downto 0);  -- internal signal to connect the channel sub system and the memory controller
   signal ALL_TRIGED                                                                               : std_logic;  -- internal signal to connect the
@@ -192,6 +201,7 @@ architecture Behaviour of waveform_gen_top is
   signal PULSES_IN, PULSES_OUT                                                                    : std_logic_vector (11 downto 0);  -- to connect gaurd and indvidual channels to envelope clipper
   signal ADDR, DATA : std_logic_vector (15 downto 0);  -- signal to connect memory controller and memory interface
   signal LOAD, LOAD_OVER : std_logic;   -- signal to connect memory controller and memory interface
+  signal TRIG : std_logic;              -- signal from trigger to limit the trigger pulse width
 begin  -- architecture Behaviour
 
   ch_sub_system_1 : entity work.ch_sub_system
@@ -544,6 +554,15 @@ begin  -- architecture Behaviour
       PULSE_OUT   => OUT_CH6_NOT,
       RST         => RST,
       SYS_CLK     => SYS_CLK);
+
+  monostable_1: entity work.monostable
+    port map (
+      PULSE_WIDTH => "0000000000001111",
+      TRIGGER     => TRIG_IN,
+      SYS_CLK     => SYS_CLK,
+      RST         => RST,
+      OUTPUT      => TRIG);
+  --TRIG <= TRIG_IN;
 
   CH1_NOT <= not CH1;
   CH2_NOT <= not CH2;
