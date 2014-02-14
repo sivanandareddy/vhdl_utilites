@@ -43,10 +43,10 @@ entity ROM_programmer_top_module is
            RS232_DCE_TXD : out STD_LOGIC;  -- female D9 connector TX pin
 
            SW  : in STD_LOGIC_VECTOR(3 downto 0);  -- input switches
-           RX_CLK_N     : out STD_LOGIC;  -- output for test points
-           RX_N         : out STD_LOGIC_VECTOR(4 downto 0);  -- output for test
+           --RX_CLK_N     : out STD_LOGIC;  -- output for test points
+           RX_N         : out STD_LOGIC_VECTOR(5 downto 0);  -- output for test
                                                              -- pins
-           
+           RST : in STD_LOGIC;          --reset
            LED : out  STD_LOGIC_VECTOR (7 downto 0));  -- LED to show output
 end ROM_programmer_top_module;
 
@@ -70,6 +70,7 @@ architecture Behavioral of ROM_programmer_top_module is
       j2_26      : out   std_logic;
       j2_22      : out   std_logic;
       j2_14      : out   std_logic;
+      RST        : in    std_logic;
       clk        : in    std_logic);
   end component;
 
@@ -89,10 +90,11 @@ begin
       rx_female  => RS232_DCE_RXD,
       sw         => SW(1 downto 0),
       led        => LED,
-      j2_30      => RX_CLK_N,
+      j2_30      => RX_N(5),
       j2_26      => RX_N(4),
       j2_22      => RX_N(3),
       j2_14      => RX_N(2),
+      RST        => RST,
       clk        => CLK_50MHZ);
 
  -- NF_D(14 downto 8) <= (others => 'open');

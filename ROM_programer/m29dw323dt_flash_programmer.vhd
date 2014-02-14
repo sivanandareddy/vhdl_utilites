@@ -43,7 +43,10 @@
 ------------------------------------------------------------------------------------
 --Revesion 1.0 - Shantanu Sarkar - DATE 25 MAY 09
 --In the Toplevel VHDL Module I have changed a little. The Interrupt will be generated 
---whenever the UART receiver FIFO is Half_Full.     
+--whenever the UART receiver FIFO is Half_Full.
+--Revision 1.1 - Sivananda Reddy - Date 13 FEB 2014
+-- The reset siganl is taken out to make manual reset when needed rather than
+-- connected to GND;
 ------------------------------------------------------------------------------------
 --
 -- Library declarations
@@ -76,6 +79,7 @@ entity m29dw323dt_flash_programmer is
                  j2_26 : out std_logic;
                  j2_22 : out std_logic;
                  j2_14 : out std_logic;
+                 RST   : in std_logic;  -- revision 1.1 reset pin is added 
                    clk : in std_logic);
     end m29dw323dt_flash_programmer;
 
@@ -270,7 +274,8 @@ begin
                instruction => instruction,
                        clk => clk);
 
-  kcpsm3_reset <= '0';
+  kcpsm3_reset <= RST;                  -- revision 1.1 reset pin is taken out
+                                        -- for manual reseting
 
 
   --
