@@ -14,9 +14,13 @@
 -- Dependencies: 
 --
 -- Revision: 
--- Revision 0.02 - File Created
+-- Revision 0.2 - File Created
 -- Additional Comments: 
 -- waiting for 2 macine cycles state is change to only one machine cycle
+-- Revision 0.3 - Changes in the combinational part of the circuit
+-- It was found that there is abiguity in the states as the outputs in each
+-- state are not defined properly. So all the outputs are given a value in
+-- in each state. 
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
@@ -249,107 +253,249 @@ begin
       when CHECK_CH1_STATE =>
         LOAD          <= '0';
         ADDR          <= ADDR_CH1;
-        LOAD_DONE_CH6 <= '0';
         LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when LOAD_CH1_STATE =>
-        LOAD <= '1';
-        ADDR <= ADDR_CH1;
+        LOAD          <= '1';
+        ADDR          <= ADDR_CH1;
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when WAIT_CH1_DATA_STATE =>
-        LOAD <= '1';
-        ADDR <= ADDR_CH1;
+        LOAD          <= '1';
+        ADDR          <= ADDR_CH1;
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when WAIT_FOR_2MC_CH1_STATE =>
         LOAD          <= '0';
         ADDR          <= "0000000000000000";
+        -- LOAD_DONE_CH1 <= '1';
         LOAD_DONE_CH1 <= '1';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       -----------------------------------------------------------------------
       -- channel 2
       -----------------------------------------------------------------------
       when CHECK_CH2_STATE =>
         LOAD          <= '0';
         ADDR          <= ADDR_CH2;
+        -- LOAD_DONE_CH1 <= '0';
+        -- LOAD_DONE_CH2 <= '0';
         LOAD_DONE_CH1 <= '0';
         LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when LOAD_CH2_STATE =>
-        LOAD <= '1';
-        ADDR <= ADDR_CH2;
+        LOAD          <= '1';
+        ADDR          <= ADDR_CH2;
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when WAIT_CH2_DATA_STATE =>
-        LOAD <= '1';
-        ADDR <= ADDR_CH2;
+        LOAD          <= '1';
+        ADDR          <= ADDR_CH2;
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when WAIT_FOR_2MC_CH2_STATE =>
         LOAD          <= '0';
         ADDR          <= "0000000000000000";
+        -- LOAD_DONE_CH2 <= '1';
+        LOAD_DONE_CH1 <= '0';
         LOAD_DONE_CH2 <= '1';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       -----------------------------------------------------------------------
       -- channel 3
       -----------------------------------------------------------------------
       when CHECK_CH3_STATE =>
         LOAD          <= '0';
         ADDR          <= ADDR_CH3;
+        -- LOAD_DONE_CH2 <= '0';
+        -- LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH1 <= '0';
         LOAD_DONE_CH2 <= '0';
         LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when LOAD_CH3_STATE =>
-        LOAD <= '1';
-        ADDR <= ADDR_CH3;
+        LOAD          <= '1';
+        ADDR          <= ADDR_CH3;
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when WAIT_CH3_DATA_STATE =>
-        LOAD <= '1';
-        ADDR <= ADDR_CH3;
+        LOAD          <= '1';
+        ADDR          <= ADDR_CH3;
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when WAIT_FOR_2MC_CH3_STATE =>
         LOAD          <= '0';
         ADDR          <= "0000000000000000";
+        -- LOAD_DONE_CH3 <= '1';
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
         LOAD_DONE_CH3 <= '1';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       -------------------------------------------------------------------------
       -- channel 4
       -------------------------------------------------------------------------
       when CHECK_CH4_STATE =>
         LOAD          <= '0';
         ADDR          <= ADDR_CH4;
+        -- LOAD_DONE_CH3 <= '0';
+        -- LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
         LOAD_DONE_CH3 <= '0';
         LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when LOAD_CH4_STATE =>
-        LOAD <= '1';
-        ADDR <= ADDR_CH4;
+        LOAD          <= '1';
+        ADDR          <= ADDR_CH4;
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when WAIT_CH4_DATA_STATE =>
-        LOAD <= '1';
-        ADDR <= ADDR_CH4;
+        LOAD          <= '1';
+        ADDR          <= ADDR_CH4;
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when WAIT_FOR_2MC_CH4_STATE =>
         LOAD          <= '0';
         ADDR          <= "0000000000000000";
+        -- LOAD_DONE_CH4 <= '1';
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
         LOAD_DONE_CH4 <= '1';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       -------------------------------------------------------------------------
       -- channel 5
       ------------------------------------------------------------------------
       when CHECK_CH5_STATE =>
         LOAD          <= '0';
         ADDR          <= ADDR_CH5;
+        -- LOAD_DONE_CH4 <= '0';
+        -- LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
         LOAD_DONE_CH4 <= '0';
         LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when LOAD_CH5_STATE =>
-        LOAD <= '1';
-        ADDR <= ADDR_CH5;
+        LOAD          <= '1';
+        ADDR          <= ADDR_CH5;
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when WAIT_CH5_DATA_STATE =>
-        LOAD <= '1';
-        ADDR <= ADDR_CH5;
+        LOAD          <= '1';
+        ADDR          <= ADDR_CH5;
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when WAIT_FOR_2MC_CH5_STATE =>
         LOAD          <= '0';
         ADDR          <= "0000000000000000";
+        -- LOAD_DONE_CH5 <= '1';
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
         LOAD_DONE_CH5 <= '1';
+        LOAD_DONE_CH6 <= '0';
       -------------------------------------------------------------------------
       -- channel 6
       -------------------------------------------------------------------------
       when CHECK_CH6_STATE =>
         LOAD          <= '0';
         ADDR          <= ADDR_CH6;
+        -- LOAD_DONE_CH5 <= '0';
+        -- LOAD_DONE_CH6 <= '0';
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
         LOAD_DONE_CH5 <= '0';
         LOAD_DONE_CH6 <= '0';
       when LOAD_CH6_STATE =>
-        LOAD <= '1';
-        ADDR <= ADDR_CH6;
+        LOAD          <= '1';
+        ADDR          <= ADDR_CH6;
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when WAIT_CH6_DATA_STATE =>
-        LOAD <= '1';
-        ADDR <= ADDR_CH6;
+        LOAD          <= '1';
+        ADDR          <= ADDR_CH6;
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       when WAIT_FOR_2MC_CH6_STATE =>
         LOAD          <= '0';
         ADDR          <= "0000000000000000";
+        -- LOAD_DONE_CH6 <= '1';
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
         LOAD_DONE_CH6 <= '1';
       when others => null;
     end case;
