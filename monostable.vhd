@@ -13,9 +13,10 @@ use ieee.std_logic_unsigned.all;
 use ieee.std_logic_arith.all;
 
 entity monostable is
-  
+  generic (
+    BUS_WIDTH : integer := 16);         -- pulse width integer size
   port (
-    PULSE_WIDTH : in  std_logic_vector(15 downto 0);
+    PULSE_WIDTH : in  std_logic_vector((BUS_WIDTH-1) downto 0);
     TRIGGER     : in  std_logic;
     SYS_CLK     : in  std_logic;
     RST         : in  std_logic;
@@ -26,10 +27,10 @@ end monostable;
 
 architecture behav of monostable is
   
-  signal iCOUNT          : integer range 0 to 2**16 - 1;
+  signal iCOUNT          : integer range 0 to 2**BUS_WIDTH - 1;
   signal output_int      : std_logic;   -- internal signal that comes as ouptut
   signal set_count_zero  : std_logic;  -- sets the counter to zero when set to '1'
-  signal iMAX            : integer range 0 to 2**16 - 1;
+  signal iMAX            : integer range 0 to 2**BUS_WIDTH - 1;
   signal RST_INT         : std_logic;
   signal TRIGGER_DELAYED : std_logic;
   signal q0, q1          : std_logic;
