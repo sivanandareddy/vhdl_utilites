@@ -104,6 +104,8 @@ architecture Behaviour of waveform_gen_top is
       ADDR          : out std_logic_vector (15 downto 0);
       DATA          : in  std_logic_vector (15 downto 0);
       LOAD_OVER     : in  std_logic;
+      ENV_WIDTH_HIGH: out std_logic_vector (15 downto 0);
+      ENV_WIDTH_LOW : out std_logic_vector (15 downto 0);
       LOAD_CH1      : in  std_logic;
       LOAD_DONE_CH1 : out std_logic;
       ADDR_CH1      : in  std_logic_vector (15 downto 0);
@@ -147,9 +149,8 @@ architecture Behaviour of waveform_gen_top is
     port (
       RST         : in  std_logic;
       CH1_OUT     : in  std_logic;
-      PULSE_OUT   : in  std_logic;
       SYS_CLK     : in  std_logic;
-      PULSE_COUNT : in  std_logic_vector (15 downto 0);
+      ENV_WIDTH   : in  std_logic_vector (31 downto 0);
       ENV_OUT     : out std_logic);
   end component envelope_gen;
 
@@ -194,7 +195,7 @@ architecture Behaviour of waveform_gen_top is
   signal ADDR_int                                                                                 : std_logic_vector (20 downto 0);  -- internal signal
                                         -- connected to mem
                                         -- ctrl and mem interface
-  signal PULSE_COUNT_CH1                                                                          : std_logic_vector (15 downto 0);  -- to channel 1 sub system and envelope generator
+  --signal PULSE_COUNT_CH1                                                                          : std_logic_vector (15 downto 0);  -- to channel 1 sub system and envelope generator
  -- signal ADDR                                                                                     : std_logic_vector (15 downto 0);
   signal ENV_OUT                                                                                  : std_logic;  -- to connect the envelope generator and envelope clipper
   --signal PULSE_COUNT  : std_logic_vector (15 downto 0);  -- singal to debugging the channel subsystem can be removed in the release
@@ -203,11 +204,12 @@ architecture Behaviour of waveform_gen_top is
   signal ADDR, DATA : std_logic_vector (15 downto 0);  -- signal to connect memory controller and memory interface
   signal LOAD, LOAD_OVER : std_logic;   -- signal to connect memory controller and memory interface
   signal TRIG : std_logic;              -- signal from trigger to limit the trigger pulse width
+  signal ENV_WIDTH : std_logic_vector (31 downto 0);  -- envelope width to envelope generator
 begin  -- architecture Behaviour
 
   ch_sub_system_1 : entity work.ch_sub_system
     generic map (
-      iCH_BASE_ADDR => 1)
+      iCH_BASE_ADDR => 2)
     port map (
       RST           => RST,
       ALL_TRIGED    => ALL_TRIGED,
@@ -217,14 +219,14 @@ begin  -- architecture Behaviour
       CH_OUT        => CH1,
       TRIGED        => TRIGED_CH1,
       LOAD          => LOAD_CH1,
-      PULSE_OUT_ENV => PULSE_OUT_ENV,
+      PULSE_OUT_ENV => open,
       DATA          => DATA_CH1,
       ADDR          => ADDR_CH1,
-      PULSE_COUNT   => PULSE_COUNT_CH1,
+      PULSE_COUNT   => open,
       TIME_COUNT    => open);
   ch_sub_system_2 : entity work.ch_sub_system
     generic map (
-      iCH_BASE_ADDR => 2)
+      iCH_BASE_ADDR => 3)
     port map (
       RST           => RST,
       ALL_TRIGED    => ALL_TRIGED,
@@ -241,7 +243,7 @@ begin  -- architecture Behaviour
       TIME_COUNT    => open);
   ch_sub_system_3 : entity work.ch_sub_system
     generic map (
-      iCH_BASE_ADDR => 3)
+      iCH_BASE_ADDR => 4)
     port map (
       RST           => RST,
       ALL_TRIGED    => ALL_TRIGED,
@@ -258,7 +260,7 @@ begin  -- architecture Behaviour
       TIME_COUNT    => open);
   ch_sub_system_4 : entity work.ch_sub_system
     generic map (
-      iCH_BASE_ADDR => 4)
+      iCH_BASE_ADDR => 5)
     port map (
       RST           => RST,
       ALL_TRIGED    => ALL_TRIGED,
@@ -275,7 +277,7 @@ begin  -- architecture Behaviour
       TIME_COUNT    => open);
   ch_sub_system_5 : entity work.ch_sub_system
     generic map (
-      iCH_BASE_ADDR => 5)
+      iCH_BASE_ADDR => 6)
     port map (
       RST           => RST,
       ALL_TRIGED    => ALL_TRIGED,
@@ -292,7 +294,7 @@ begin  -- architecture Behaviour
       TIME_COUNT    => open);
   ch_sub_system_6 : entity work.ch_sub_system
     generic map (
-      iCH_BASE_ADDR => 6)
+      iCH_BASE_ADDR => 7)
     port map (
       RST           => RST,
       ALL_TRIGED    => ALL_TRIGED,
@@ -402,6 +404,8 @@ begin  -- architecture Behaviour
       ADDR          => ADDR,
       DATA          => DATA,
       LOAD_OVER     => LOAD_OVER,
+      ENV_WIDTH_LOW => ENV_WIDTH(15 downto 0),
+      ENV_WIDTH_HIGH=> ENV_WIDTH(31 downto 16),
       LOAD_CH1      => LOAD_CH1,
       LOAD_DONE_CH1 => LOAD_DONE_CH1,
       ADDR_CH1      => ADDR_CH1,
@@ -444,10 +448,9 @@ begin  -- architecture Behaviour
   envelope_gen_1 : entity work.envelope_gen
     port map (
       RST         => RST,
-      CH1_OUT     => CH1,
-      PULSE_OUT   => PULSE_OUT_ENV,
+      CH1_OUT     => TRIG,
+      ENV_WIDTH   => ENV_WIDTH,
       SYS_CLK     => SYS_CLK,
-      PULSE_COUNT => PULSE_COUNT_CH1,
       ENV_OUT     => ENV_OUT);
 
   envelope_clip_1 : entity work.envelope_clip
