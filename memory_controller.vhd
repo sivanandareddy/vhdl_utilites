@@ -14,10 +14,10 @@
 -- Dependencies: 
 --
 -- Revision: 
--- Revision 0.2 - File Created
+-- Revision: 0.2 - File Created
 -- Additional Comments: 
 -- waiting for 2 macine cycles state is change to only one machine cycle
--- Revision 0.3 - Changes in the combinational part of the circuit
+-- Revision: 0.3 - Changes in the combinational part of the circuit
 -- It was found that there is abiguity in the states as the outputs in each
 -- state are not defined properly. So all the outputs are given a value in
 -- in each state. 
@@ -413,7 +413,7 @@ begin
         LOAD_DONE_CH4 <= '1';
         LOAD_DONE_CH5 <= '0';
         LOAD_DONE_CH6 <= '0';
-      -------------------------------------------------------------------------
+      ------------------------------------------------------------------------
       -- channel 5
       ------------------------------------------------------------------------
       when CHECK_CH5_STATE =>
