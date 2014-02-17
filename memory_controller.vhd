@@ -9,8 +9,8 @@
 -- Target Devices: 
 -- Tool versions: 
 -- Description: Sharing memory in round robin fashion to all channels
---              that are rsiing the requests
---
+--              that are rsiing the requests.
+-- 
 -- Dependencies: 
 --
 -- Revision: 
@@ -41,6 +41,8 @@ entity memory_controller is
     ADDR          : out std_logic_vector (15 downto 0);
     DATA          : in  std_logic_vector (15 downto 0);
     LOAD_OVER     : in  std_logic;  -- above are connections to memory interface
+    ENV_WIDTH_LOW : out std_logic_vector (15 downto 0);
+    ENV_WIDTH_HIGH: out std_logic_vector (15 downto 0);
     -- channel 1
     LOAD_CH1      : in  std_logic;
     LOAD_DONE_CH1 : out std_logic;
@@ -77,10 +79,13 @@ end entity memory_controller;
 architecture Behavioral of memory_controller is
   type state_type is (CHECK_CH1_STATE, CHECK_CH2_STATE, CHECK_CH3_STATE,
                       CHECK_CH4_STATE, CHECK_CH5_STATE, CHECK_CH6_STATE,
-                      LOAD_CH1_STATE, LOAD_CH2_STATE, LOAD_CH3_STATE,
+                      LOAD_CH0_STATE_LOW, LOAD_CH0_STATE_HIGH, LOAD_CH1_STATE,
+                      LOAD_CH2_STATE, LOAD_CH3_STATE,
                       LOAD_CH4_STATE, LOAD_CH5_STATE, LOAD_CH6_STATE,
-                      WAIT_CH1_DATA_STATE, WAIT_CH2_DATA_STATE, WAIT_CH3_DATA_STATE,
+                      WAIT_CH0_STATE_LOW, WAIT_CH0_STATE_HIGH, WAIT_CH1_DATA_STATE,
+                      WAIT_CH2_DATA_STATE, WAIT_CH3_DATA_STATE,
                       WAIT_CH4_DATA_STATE, WAIT_CH5_DATA_STATE, WAIT_CH6_DATA_STATE,
+                      WAIT_FOR_2MC_CH0_STATE_LOW, WAIT_FOR_2MC_CH0_STATE_HIGH,
                       WAIT_FOR_2MC_CH1_STATE, WAIT_FOR_2MC_CH2_STATE, WAIT_FOR_2MC_CH3_STATE,
                       WAIT_FOR_2MC_CH4_STATE, WAIT_FOR_2MC_CH5_STATE, WAIT_FOR_2MC_CH6_STATE);
   signal STATE       : state_type;
@@ -94,9 +99,30 @@ begin
   state_mac : process (SYS_CLK, RST) is
   begin  -- process state_mac
     if RST = '0' then                   -- asynchronous reset (active low)
-      STATE <= CHECK_CH1_STATE;
+      STATE <= LOAD_CH0_STATE_LOW;
     elsif SYS_CLK'event and SYS_CLK = '1' then  -- rising clock edge
       case STATE is
+        -----------------------------------------------------------------------
+        -- Envelope width
+        -----------------------------------------------------------------------
+        when LOAD_CH0_STATE_LOW =>
+          STATE <= WAIT_CH0_STATE_LOW;
+        when WAIT_CH0_STATE_LOW =>
+          if LOAD_OVER = '1' then
+            STATE <= WAIT_FOR_2MC_CH0_STATE_LOW;
+            ENV_WIDTH_LOW <= DATA;
+          end if;
+        when WAIT_FOR_2MC_CH0_STATE_LOW =>
+          STATE <= LOAD_CH0_STATE_HIGH;
+        when LOAD_CH0_STATE_HIGH =>
+          STATE <= WAIT_CH0_STATE_HIGH;
+        when WAIT_CH0_STATE_HIGH =>
+          if LOAD_OVER = '1' then
+            STATE <= WAIT_FOR_2MC_CH0_STATE_HIGH;
+            ENV_WIDTH_HIGH <= DATA;
+          end if;
+        when WAIT_FOR_2MC_CH0_STATE_HIGH
+          STATE <= CHECK_CH1_STATE;
         -----------------------------------------------------------------------
         -- channel 1
         -----------------------------------------------------------------------
@@ -247,6 +273,63 @@ begin
   process (STATE) is
   begin  -- process
     case STATE is
+      -------------------------------------------------------------------------
+      -- Envelope width
+      -------------------------------------------------------------------------
+      when LOAD_CH0_STATE_LOW =>
+        LOAD <= '1';
+        ADDR <= "0000000000000000";
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
+      when WAIT_CH0_STATE_LOW =>
+        LOAD <= '1';
+        ADDR <= "0000000000000000";
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
+      when WAIT_FOR_2MC_CH0_STATE_LOW =>
+        LOAD <= '0';
+        ADDR <= "0000000000000000";
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
+      when LOAD_CH0_STATE_HIGH =>
+        LOAD <= '1';
+        ADDR <= "0000000000000001";
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
+      when WAIT_CH0_STATE_HIGH =>
+        LOAD <= '1';
+        ADDR <= "0000000000000001";
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
+      when WAIT_FOR_2MC_CH0_STATE_HIGH =>
+        LOAD <= '0';
+        ADDR <= "0000000000000000";
+        LOAD_DONE_CH1 <= '0';
+        LOAD_DONE_CH2 <= '0';
+        LOAD_DONE_CH3 <= '0';
+        LOAD_DONE_CH4 <= '0';
+        LOAD_DONE_CH5 <= '0';
+        LOAD_DONE_CH6 <= '0';
       -------------------------------------------------------------------------
       -- channel 1
       -------------------------------------------------------------------------
