@@ -20,27 +20,30 @@ entity monostable is
     TRIGGER     : in  std_logic;
     SYS_CLK     : in  std_logic;
     RST         : in  std_logic;
-    --debug       : out std_logic;
+    --debug       : out std_logic_vector((BUS_WIDTH-1) downto 0);
     OUTPUT      : out std_logic);
 
 end monostable;
 
 architecture behav of monostable is
-  
-  signal iCOUNT          : integer range 0 to 2**BUS_WIDTH - 1;
+
+  --signal iCOUNT          : integer range 0 to ((2**BUS_WIDTH) - 1);
+  signal iCOUNT          : std_logic_vector((BUS_WIDTH-1) downto 0);
+  signal iMAX            : std_logic_vector((BUS_WIDTH-1) downto 0);
   signal output_int      : std_logic;   -- internal signal that comes as ouptut
   signal set_count_zero  : std_logic;  -- sets the counter to zero when set to '1'
-  signal iMAX            : integer range 0 to 2**BUS_WIDTH - 1;
+  --signal iMAX            : integer range 0 to ((2**BUS_WIDTH) - 1);
   signal RST_INT         : std_logic;
   signal TRIGGER_DELAYED : std_logic;
   signal q0, q1          : std_logic;
-  
+
 begin  -- behav
 
   set_count_zero <= TRIGGER and (not TRIGGER_DELAYED);
   OUTPUT         <= output_int;
-  iMAX           <= CONV_INTEGER(PULSE_WIDTH);
-
+  iMAX           <= PULSE_WIDTH;
+  --debug <= conv_std_logic_vector(iMAX,BUS_WIDTH);
+  --debug <= iMAX;
   -- purpose: process to latch the signal
   -- type   : sequential
   -- inputs : TRIGGER, RST, RST_INT
@@ -95,9 +98,9 @@ begin  -- behav
       iCOUNT <= (iMAX + 1);
     elsif SYS_CLK'event and SYS_CLK = '1' then  -- rising clock edge
       if set_count_zero = '1' then
-        iCOUNT <= 0;
-      elsif (iCOUNT >= 0 and iCOUNT <= iMAX) then
-        iCOUNT <= iCOUNT + 1;
+        iCOUNT <= conv_std_logic_vector(0, BUS_WIDTH);
+      elsif (iCOUNT >= conv_std_logic_vector(0, BUS_WIDTH) and iCOUNT <= iMAX) then
+        iCOUNT <= iCOUNT + conv_std_logic_vector(1, BUS_WIDTH);
       end if;
     end if;
   end process counting;
