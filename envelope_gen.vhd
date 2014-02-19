@@ -49,6 +49,9 @@ architecture Behavioral of envelope_gen is
       RST         : in  std_logic;
       OUTPUT      : out std_logic);
   end component monostable;
+  signal DELAY_PULSE  : std_logic;      -- delayed pulse
+  signal TRIG_int : std_logic;          -- internal trigger to monostable_envelope
+  signal q2, q1, q0, DELAY_PULSE_D : std_logic;  -- for delaying the signal by 3 clock cycles
 
 begin
   monostable_env: entity work.monostable
@@ -56,12 +59,41 @@ begin
       BUS_WIDTH => 32)
     port map (
       PULSE_WIDTH => ENV_WIDTH,
-      TRIGGER     => CH1_OUT,
+      TRIGGER     => TRIG_int,
       SYS_CLK     => SYS_CLK,
       RST         => RST,
       OUTPUT      => ENV_OUT);
-  
 
+  monostable_delay: entity work.monostable
+    generic map (
+      BUS_WIDTH => 16)
+    port map (
+      PULSE_WIDTH => conv_std_logic_vector(432,16),
+      TRIGGER     => CH1_OUT,
+      SYS_CLK     => SYS_CLK,
+      RST         => RST,
+      OUTPUT      => DELAY_PULSE);
 
+  -- purpose: to delay the output of monostable by 3 clock cycles
+  -- type   : sequential
+  -- inputs : SYS_CLK, RST, DELAY_PULSE
+  -- outputs: DELAY_PULSE_D
+  delaying: process (SYS_CLK, RST) is
+  begin  -- process delaying
+    if RST = '0' then                   -- asynchronous reset (active low)
+      q0 <= '0';
+      q1 <= '0';
+      q2 <= '0';
+      DELAY_PULSE_D <= '0';
+    elsif SYS_CLK'event and SYS_CLK = '1' then  -- rising clock edge
+      q0 <= DELAY_PULSE;
+      q1 <= q0;
+      q2 <= q1;
+      DELAY_PULSE_D <= q2;
+    end if;
+  end process delaying;
+
+  TRIG_int <= (not DELAY_PULSE) and DELAY_PULSE_D;
+  --ENV_OUT <= TRIG_int;
 end Behavioral;
 
