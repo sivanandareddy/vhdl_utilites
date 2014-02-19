@@ -100,29 +100,47 @@ begin
   begin  -- process state_mac
     if RST = '0' then                   -- asynchronous reset (active low)
       STATE <= LOAD_CH0_STATE_LOW;
+      iWAIT_COUNT <= 2;
     elsif SYS_CLK'event and SYS_CLK = '1' then  -- rising clock edge
       case STATE is
         -----------------------------------------------------------------------
         -- Envelope width
         -----------------------------------------------------------------------
         when LOAD_CH0_STATE_LOW =>
+          --iWAIT_COUNT <= iWAIT_COUNT - 1;
           STATE <= WAIT_CH0_STATE_LOW;
+          --if iWAIT_COUNT = 0 then
+            --STATE <= WAIT_CH0_STATE_LOW;
+         -- end if;
         when WAIT_CH0_STATE_LOW =>
+          ENV_WIDTH_LOW <= DATA;
+          --iWAIT_COUNT <= 2;
           if LOAD_OVER = '1' then
             STATE <= WAIT_FOR_2MC_CH0_STATE_LOW;
-            ENV_WIDTH_LOW <= DATA;
           end if;
         when WAIT_FOR_2MC_CH0_STATE_LOW =>
           STATE <= LOAD_CH0_STATE_HIGH;
+          -- iWAIT_COUNT <= iWAIT_COUNT - 1;
+          -- if iWAIT_COUNT = 0 then
+          --  STATE <= LOAD_CH0_STATE_HIGH;
+          -- end if;
+          
         when LOAD_CH0_STATE_HIGH =>
           STATE <= WAIT_CH0_STATE_HIGH;
         when WAIT_CH0_STATE_HIGH =>
+          ENV_WIDTH_HIGH <= DATA;
+          --iWAIT_COUNT <= 2;
           if LOAD_OVER = '1' then
             STATE <= WAIT_FOR_2MC_CH0_STATE_HIGH;
-            ENV_WIDTH_HIGH <= DATA;
           end if;
-        when WAIT_FOR_2MC_CH0_STATE_HIGH
-          STATE <= CHECK_CH1_STATE;
+        when WAIT_FOR_2MC_CH0_STATE_HIGH =>
+          iWAIT_COUNT <= iWAIT_COUNT - 1;
+          -- STATE <= CHECK_CH1_STATE;
+          if iWAIT_COUNT = 0 then
+            STATE <= CHECK_CH1_STATE;
+          else
+            STATE <= LOAD_CH0_STATE_LOW;
+          end if;
         -----------------------------------------------------------------------
         -- channel 1
         -----------------------------------------------------------------------
