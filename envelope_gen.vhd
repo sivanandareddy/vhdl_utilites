@@ -51,7 +51,7 @@ architecture Behavioral of envelope_gen is
   end component monostable;
 
 begin
-  monostable_1: entity work.monostable
+  monostable_env: entity work.monostable
     generic map (
       BUS_WIDTH => 32)
     port map (
