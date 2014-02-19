@@ -119,12 +119,14 @@ begin
   -- type   : sequential
   -- inputs : PULSE_OUT, RST
   -- outputs: CH_OUT_SIG
-  t_flipflp: process (PULSE_OUT, RST) is
+  t_flipflp: process (SYS_CLK, RST) is
   begin  -- process t_flipflp
     if RST = '0' and TRIG = '1'then                   -- asynchronous reset (active low)
       CH_OUT_SIG <= '0';
-    elsif PULSE_OUT'event and PULSE_OUT = '1' then  -- rising clock edge
-      CH_OUT_SIG <= not CH_OUT_SIG;
+    elsif SYS_CLK'event and SYS_CLK = '1' then  -- rising clock edge
+      if PULSE_OUT = '1' then
+        CH_OUT_SIG <= not CH_OUT_SIG;
+      end if;
     end if;
   end process t_flipflp;
 
