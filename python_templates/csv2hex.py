@@ -26,14 +26,14 @@ while (index <= index_max):
             data_buf[2*i+1] = 0;
             index = index + 1;
         else:
-				##############Big Endian Format###############################
+            ##############Big Endian Format###############################
             #data_buf[2*i] = ((int(csv_list[index][1])) >> 8) & 0xff;
             #data_buf[2*i+1] = ((int(csv_list[index][1]))) & 0xff;
-				##############################################################
-				#############Little Endian Format#############################
-				data_buf[2*i+1] = ((int(csv_list[index][1])) >> 8) & 0xff;
+			##############################################################
+			#############Little Endian Format#############################
+			data_buf[2*i+1] = ((int(csv_list[index][1])) >> 8) & 0xff;
             data_buf[2*i] = ((int(csv_list[index][1]))) & 0xff;
-				##############################################################            
+			##############################################################            
 index = index + 1;
     data_str = "";
     for i in range(0,16):
